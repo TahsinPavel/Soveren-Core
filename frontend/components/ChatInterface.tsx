@@ -5,6 +5,8 @@ import { Message } from '@/lib/types';
 import { Send, User, Sparkles, Loader2, ShieldCheck, Lock, Sun, Moon } from 'lucide-react';
 import { CryptoService } from '@/lib/crypto';
 import { PrivacyFilter } from '@/lib/privacy';
+import { saveMemory, searchMemories } from '@/lib/memory';
+import MemoryVisualizer from './MemoryVisualizer';
 import { clsx } from 'clsx';
 import { twMerge } from 'tailwind-merge';
 
@@ -19,6 +21,25 @@ export default function ChatInterface({ onMessagesChange, theme, onThemeToggle }
     const [input, setInput] = useState('');
     const [isLoading, setIsLoading] = useState(false);
     const messagesEndRef = useRef<HTMLDivElement>(null);
+    const [userId, setUserId] = useState('');
+    const [secretKey, setSecretKey] = useState('');
+
+    useEffect(() => {
+        // Initialize User Identity & Encryption Key locally
+        let uid = localStorage.getItem('soveren_user_id');
+        if (!uid) {
+            uid = crypto.randomUUID();
+            localStorage.setItem('soveren_user_id', uid);
+        }
+        setUserId(uid);
+
+        let key = localStorage.getItem('soveren_session_key');
+        if (!key) {
+            key = crypto.randomUUID();
+            localStorage.setItem('soveren_session_key', key);
+        }
+        setSecretKey(key);
+    }, []);
 
     const scrollToBottom = () => {
         messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
@@ -44,6 +65,19 @@ export default function ChatInterface({ onMessagesChange, theme, onThemeToggle }
             encryptedBlobs[token] = await CryptoService.encrypt(value);
         }
 
+        // 2. Semantic Retrieval (Encrypted)
+        let contextText = "";
+        if (userId && secretKey) {
+            const memories = await searchMemories(originalText, userId, secretKey);
+            if (memories.length > 0) {
+                const uniqueSnippets = Array.from(new Set(memories.map(m => m.metadata_blob.text_snippet).filter(Boolean)));
+                if (uniqueSnippets.length > 0) {
+                    contextText = `\n\n[Relevant Memories]:\n${uniqueSnippets.join('\n')}`;
+                    console.log("Injected memories:", uniqueSnippets);
+                }
+            }
+        }
+
         const newUserMsg: Message = {
             id: Date.now().toString(),
             role: 'user',
@@ -57,12 +91,17 @@ export default function ChatInterface({ onMessagesChange, theme, onThemeToggle }
         setMessages(updatedMessages);
         onMessagesChange(updatedMessages);
 
+        // 3. Save to Memory (Fire and Forget)
+        if (userId && secretKey) {
+            saveMemory(originalText, { source: 'chat' }, userId, secretKey);
+        }
+
         try {
             const response = await fetch('http://localhost:8000/chat', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({
-                    anonymized_text: anonymizedText,
+                    anonymized_text: anonymizedText + contextText, // Inject memory context
                     encrypted_blobs: encryptedBlobs
                 })
             });
@@ -144,6 +183,8 @@ export default function ChatInterface({ onMessagesChange, theme, onThemeToggle }
 
             {/* Messages Area */}
             <div className="flex-1 overflow-y-auto px-4 py-8 space-y-8 scroll-smooth">
+                {userId && <MemoryVisualizer userId={userId} />}
+
                 {messages.length === 0 && (
                     <div className="h-full flex flex-col items-center justify-center text-center space-y-4 opacity-50 pb-20">
                         <div className={clsx(

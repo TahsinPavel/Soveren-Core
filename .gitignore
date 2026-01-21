@@ -1,25 +1,63 @@
 # Python
 __pycache__/
-*.pyc
-*.pyo
-*.pyd
+*.py[cod]
+*$py.class
+*.so
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+share/python-wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+MANIFEST
 
-# Virtual Environment
+# Virtual Environments
 venv/
 env/
-.env
+ENV/
+env.bak/
+venv.bak/
 
-# Logs
-*.log
-log.txt
-log_utf8.txt
+# Testing & Code Quality
+.pytest_cache/
+.coverage
+htmlcov/
+.mypy_cache/
+.tox/
+.nox/
+.hypothesis/
 
-# User Data & Configuration
-user_profile.json
+# Jupyter Notebooks
+.ipynb_checkpoints
 
-# IDE settings
+# IDEs and Editors
 .vscode/
 .idea/
+*.swp
+*.swo
+.project
+.classpath
+.settings/
+
+# OS Generated Files
+.DS_Store
+.DS_Store?
+._*
+.Trashes
+ehthumbs.db
+Thumbs.db
+Desktop.ini
 
 # Node.js / Next.js
 node_modules/
@@ -27,15 +65,36 @@ node_modules/
 out/
 build/
 dist/
+.pnpm-store/
+
+# Logs
+logs
+*.log
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
-.pnpm-debug.log*
+pnpm-debug.log*
+lerna-debug.log*
+log.txt
+log_utf8.txt
 
-# OS specific
-.DS_Store
-Thumbs.db
+# Environment Variables
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+*.env
+*.env.*
+
+# TypeScript
+*.tsbuildinfo
+next-env.d.ts
+
+# User Data & Configuration
+user_profile.json
 
 # Agent & Shared Resources
 .agent/
 .shared/
+.gemini/
