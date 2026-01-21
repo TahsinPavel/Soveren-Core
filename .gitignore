@@ -20,3 +20,22 @@ user_profile.json
 # IDE settings
 .vscode/
 .idea/
+
+# Node.js / Next.js
+node_modules/
+.next/
+out/
+build/
+dist/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+.pnpm-debug.log*
+
+# OS specific
+.DS_Store
+Thumbs.db
+
+# Agent & Shared Resources
+.agent/
+.shared/
