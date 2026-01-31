@@ -19,7 +19,7 @@
 
 ## 🌟 Vision
 
-In an age where *"if the product is free, you are the product,"* **Soveren** stands as the alternative. We're building a **decentralized, privacy-first agentic infrastructure** designed to return data sovereignty to the individual.
+**AI that works for you, not on you.** We're building a **decentralized, privacy-first agentic infrastructure** designed to return data sovereignty to the individual.
 
 Built on the principles of **Fully Homomorphic Encryption (FHE)** — the "Holy Grail" of cryptography — Soveren enables AI agents to reason, negotiate, and execute complex tasks on behalf of users **without ever seeing their raw data**.
 
